@@ -1,0 +1,9 @@
+name: 'Pull submodule dependencies'
+description: 'Pull in changes on submodules which are required by a pull request'
+inputs:
+  repo-token:
+    description: 'Repository token used to get the PR body'
+    required: true
+runs:
+  using: 'node12'
+  main: 'lib/main.js'

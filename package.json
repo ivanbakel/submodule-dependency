@@ -1,0 +1,24 @@
+{
+  "name": "submodule-dependency-action",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "pack" : "ncc build lib/main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "@actions/exec": "^1.0.4",
+    "@actions/github": "^3.0.0",
+    "@octokit/webhooks": "^7.6.3",
+    "simple-git": "^2.6.0"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.22.3",
+    "typescript": "^3.9.5"
+  }
+}
