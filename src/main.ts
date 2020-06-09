@@ -7,8 +7,6 @@ async function run(): Promise<void> {
   try {
     const token = core.getInput('repo-token');
 
-    const octokit_api_client = github.getOctokit(token);
-
     if (github.context.eventName == "pull_request") {
 
       core.startGroup("Looking for submodule dependencies")
