@@ -1768,13 +1768,11 @@ var exec = __webpack_require__(986);
 var github = __webpack_require__(469);
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var token, octokit_api_client, depUser, depRepo, depPR, pr, submodule_dependency_pattern, results, git_options, error_1;
+        var depUser, depRepo, depPR, pr, submodule_dependency_pattern, results, git_options, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 5, , 6]);
-                    token = core.getInput('repo-token');
-                    octokit_api_client = github.getOctokit(token);
+                    _a.trys.push([0, 6, , 7]);
                     if (!(github.context.eventName == "pull_request")) return [3 /*break*/, 4];
                     core.startGroup("Looking for submodule dependencies");
                     depUser = null;
@@ -1809,13 +1807,16 @@ function run() {
                     _a.sent();
                     core.info("Updated submodule " + depRepo + " to " + depUser + "/" + depRepo + "#" + depPR);
                     core.endGroup();
-                    _a.label = 4;
-                case 4: return [3 /*break*/, 6];
-                case 5:
+                    return [3 /*break*/, 5];
+                case 4:
+                    core.info("Not a pull request, ignoring.");
+                    _a.label = 5;
+                case 5: return [3 /*break*/, 7];
+                case 6:
                     error_1 = _a.sent();
                     core.setFailed(error_1.Message);
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+                    return [3 /*break*/, 7];
+                case 7: return [2 /*return*/];
             }
         });
     });

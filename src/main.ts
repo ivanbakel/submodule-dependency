@@ -5,8 +5,6 @@ import * as webhooks from '@octokit/webhooks'
 
 async function run(): Promise<void> {
   try {
-    const token = core.getInput('repo-token');
-
     if (github.context.eventName == "pull_request") {
 
       core.startGroup("Looking for submodule dependencies")
@@ -56,6 +54,8 @@ async function run(): Promise<void> {
       core.info(`Updated submodule ${depRepo} to ${depUser}/${depRepo}#${depPR}`);
 
       core.endGroup()
+    } else {
+      core.info("Not a pull request, ignoring.");
     }
   } catch (error) {
     core.setFailed(error.Message)
