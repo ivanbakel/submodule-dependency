@@ -4,4 +4,8 @@ The `submodule-dependency` action allows PR authors to mark pull requests agains
 
 ## Declaring a dependency
 
-A submodule pull-request dependency can be declared by putting "Requires <GitHub user>/<repository>#<PR number>" anywhere in the pull request body.
+A submodule pull-request dependency can be declared by putting "Requires \<GitHub user\>/\<repository\>#\<PR number\>" anywhere in the pull request body.
+
+## Limitations
+
+The action currently allows at most one dependency, and assumes that the corresponding submodule is located in a folder of the same name in the root directory of the repository. It also assumes that the dependency can be fetched over HTTPS. Finally, it assumes that the `pullfrom` remote name is not in use.
