@@ -47,9 +47,7 @@ async function run(): Promise<void> {
 
       await exec.exec("git", ["remote", "add", "pullfrom", `https://github.com/${depUser}/${depRepo}.git`], git_options);
 
-      await exec.exec("git", ["fetch", "pullfrom", `pull/${depPR}/head`], git_options);
-
-      await exec.exec("git", ["checkout", "FETCH_HEAD"], git_options);
+      await exec.exec("git", ["pull", "--no-edit", "pullfrom", `pull/${depPR}/head`], git_options);
 
       core.info(`Updated submodule ${depRepo} to ${depUser}/${depRepo}#${depPR}`);
 
