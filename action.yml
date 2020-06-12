@@ -2,4 +2,4 @@ name: 'Pull submodule dependencies'
 description: 'Pull in changes on submodules which are required by a pull request'
 runs:
   using: 'node12'
-  main: 'lib/main.js'
+  main: 'dist/index.js'
