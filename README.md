@@ -8,4 +8,6 @@ A submodule pull-request dependency can be declared by putting "Requires \<GitHu
 
 ## Limitations
 
-The action currently allows at most one dependency, and assumes that the corresponding submodule is located in a folder of the same name in the root directory of the repository. It also assumes that the dependency can be fetched over HTTPS. Finally, it assumes that the `pullfrom` remote name is not in use.
+  * The action assumes that the corresponding submodule is located in a folder of the same name in the root directory of the repository.
+  * The action assumes that the dependency can be fetched over HTTPS.
+  * The action assumes that the `pullfrom` remote name is not in use in the submodule.

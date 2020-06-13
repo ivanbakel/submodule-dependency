@@ -1766,57 +1766,61 @@ exports.__esModule = true;
 var core = __webpack_require__(470);
 var exec = __webpack_require__(986);
 var github = __webpack_require__(469);
+var dependencies = __webpack_require__(284);
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var depUser, depRepo, depPR, pr, submodule_dependency_pattern, results, git_options, error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var pr, deps, _i, deps_1, dep, _a, deps_2, dep, git_options, error_1;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _a.trys.push([0, 6, , 7]);
-                    if (!(github.context.eventName == "pull_request")) return [3 /*break*/, 4];
+                    _b.trys.push([0, 8, , 9]);
+                    if (!(github.context.eventName == "pull_request")) return [3 /*break*/, 6];
                     core.startGroup("Looking for submodule dependencies");
-                    depUser = null;
-                    depRepo = null;
-                    depPR = null;
                     pr = github.context.payload;
-                    submodule_dependency_pattern = /requires (?<depUser>[a-zA-Z0-9_-]+)\/(?<depRepo>[a-zA-Z0-9_-]+)#(?<depPR>[0-9]+)/i;
-                    results = submodule_dependency_pattern.exec(pr.pull_request.body);
-                    if (results != null && results.groups != undefined) {
-                        depUser = results.groups["depUser"];
-                        depRepo = results.groups["depRepo"];
-                        depPR = results.groups["depPR"];
-                        core.info("Detected a submodule dependency - pull request " + depPR + " on " + depUser + "/" + depRepo);
+                    deps = dependencies.get_submodule_dependencies(pr.pull_request.body);
+                    if (deps.length > 0) {
+                        for (_i = 0, deps_1 = deps; _i < deps_1.length; _i++) {
+                            dep = deps_1[_i];
+                            core.info("Detected a submodule dependency - pull request " + dep.depPR + " on " + dep.depUser + "/" + dep.depRepo);
+                        }
                     }
                     else {
                         core.info("No submodule dependencies found");
                     }
                     core.endGroup();
-                    if (depUser == null || depRepo == null || depPR == null) {
+                    if (deps.length == 0) {
                         return [2 /*return*/];
                     }
                     core.startGroup("Update submodules");
-                    git_options = { cwd: "./" + depRepo };
-                    return [4 /*yield*/, exec.exec("git", ["remote", "add", "pullfrom", "https://github.com/" + depUser + "/" + depRepo + ".git"], git_options)];
+                    _a = 0, deps_2 = deps;
+                    _b.label = 1;
                 case 1:
-                    _a.sent();
-                    return [4 /*yield*/, exec.exec("git", ["fetch", "pullfrom", "pull/" + depPR + "/head"], git_options)];
+                    if (!(_a < deps_2.length)) return [3 /*break*/, 5];
+                    dep = deps_2[_a];
+                    git_options = { cwd: "./" + dep.depRepo };
+                    return [4 /*yield*/, exec.exec("git", ["remote", "add", "pullfrom", "https://github.com/" + dep.depUser + "/" + dep.depRepo + ".git"], git_options)];
                 case 2:
-                    _a.sent();
-                    return [4 /*yield*/, exec.exec("git", ["checkout", "FETCH_HEAD"], git_options)];
+                    _b.sent();
+                    return [4 /*yield*/, exec.exec("git", ["pull", "--no-edit", "pullfrom", "pull/" + dep.depPR + "/head"], git_options)];
                 case 3:
-                    _a.sent();
-                    core.info("Updated submodule " + depRepo + " to " + depUser + "/" + depRepo + "#" + depPR);
-                    core.endGroup();
-                    return [3 /*break*/, 5];
+                    _b.sent();
+                    core.info("Updated submodule " + dep.depRepo + " to " + dep.depUser + "/" + dep.depRepo + "#" + dep.depPR);
+                    _b.label = 4;
                 case 4:
-                    core.info("Not a pull request, ignoring.");
-                    _a.label = 5;
-                case 5: return [3 /*break*/, 7];
-                case 6:
-                    error_1 = _a.sent();
-                    core.setFailed(error_1.Message);
+                    _a++;
+                    return [3 /*break*/, 1];
+                case 5:
+                    core.endGroup();
                     return [3 /*break*/, 7];
-                case 7: return [2 /*return*/];
+                case 6:
+                    core.info("Not a pull request, ignoring.");
+                    _b.label = 7;
+                case 7: return [3 /*break*/, 9];
+                case 8:
+                    error_1 = _b.sent();
+                    core.setFailed(error_1.Message);
+                    return [3 /*break*/, 9];
+                case 9: return [2 /*return*/];
             }
         });
     });
@@ -3543,6 +3547,34 @@ function coerce (version) {
     '.' + (match[2] || '0') +
     '.' + (match[3] || '0'))
 }
+
+
+/***/ }),
+
+/***/ 284:
+/***/ (function(__unusedmodule, exports) {
+
+"use strict";
+
+exports.__esModule = true;
+exports.get_submodule_dependencies = void 0;
+function get_submodule_dependencies(text) {
+    var submodule_dependency_pattern = /requires (?<depUser>[a-zA-Z0-9_-]+)\/(?<depRepo>[a-zA-Z0-9_-]+)#(?<depPR>[0-9]+)/ig;
+    var results = [];
+    // By using the global flag (g), we can search repeatedly by running `exec`
+    // multiple times
+    var match = submodule_dependency_pattern.exec(text);
+    if (match != null && match.groups != undefined) {
+        results.push({
+            depUser: match.groups["depUser"],
+            depRepo: match.groups["depRepo"],
+            depPR: match.groups["depPR"]
+        });
+        match = submodule_dependency_pattern.exec(text);
+    }
+    return results;
+}
+exports.get_submodule_dependencies = get_submodule_dependencies;
 
 
 /***/ }),
