@@ -6,7 +6,7 @@ export interface SubmoduleDependency {
 
 export function get_submodule_dependencies(text : string) : SubmoduleDependency[] {
   const submodule_dependency_pattern
-    = /requires (?<depUser>[a-zA-Z0-9_-]+)\/(?<depRepo>[a-zA-Z0-9_-]+)#(?<depPR>[0-9]+)/ig;
+    = /(requires|depends on) (?<depUser>[a-zA-Z0-9_-]+)\/(?<depRepo>[a-zA-Z0-9_-]+)#(?<depPR>[0-9]+)/ig;
 
   var results : SubmoduleDependency[] = [];
 

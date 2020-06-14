@@ -3566,7 +3566,7 @@ function coerce (version) {
 exports.__esModule = true;
 exports.get_submodule_dependencies = void 0;
 function get_submodule_dependencies(text) {
-    var submodule_dependency_pattern = /requires (?<depUser>[a-zA-Z0-9_-]+)\/(?<depRepo>[a-zA-Z0-9_-]+)#(?<depPR>[0-9]+)/ig;
+    var submodule_dependency_pattern = /(requires|depends on) (?<depUser>[a-zA-Z0-9_-]+)\/(?<depRepo>[a-zA-Z0-9_-]+)#(?<depPR>[0-9]+)/ig;
     var results = [];
     // By using the global flag (g), we can search repeatedly by running `exec`
     // multiple times
