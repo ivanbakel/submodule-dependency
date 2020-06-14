@@ -28,6 +28,12 @@ async function run(): Promise<void> {
         return;
       }
 
+      core.startGroup("Setting git identity");
+
+      await exec.exec("git", ["config", "--global", "user.name", "GitHub Action Runner"]);
+
+      core.endGroup();
+
       core.startGroup("Update submodules")
 
       // Assumption: the submodule is in a folder of the same name (the name of the dependency repo)
@@ -38,7 +44,8 @@ async function run(): Promise<void> {
 
         await exec.exec("git", ["remote", "add", "pullfrom", `https://github.com/${dep.depUser}/${dep.depRepo}.git`], git_options);
 
-        await exec.exec("git", ["pull", "--no-edit", "pullfrom", `pull/${dep.depPR}/head`], git_options);
+        // Pull without changing the default commit message, and always merge
+        await exec.exec("git", ["pull", "--no-edit", "--no-rebase", "pullfrom", `pull/${dep.depPR}/head`], git_options);
 
         core.info(`Updated submodule ${dep.depRepo} to ${dep.depUser}/${dep.depRepo}#${dep.depPR}`);
       }

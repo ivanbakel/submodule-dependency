@@ -1773,8 +1773,8 @@ function run() {
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    _b.trys.push([0, 8, , 9]);
-                    if (!(github.context.eventName == "pull_request")) return [3 /*break*/, 6];
+                    _b.trys.push([0, 9, , 10]);
+                    if (!(github.context.eventName == "pull_request")) return [3 /*break*/, 7];
                     core.startGroup("Looking for submodule dependencies");
                     pr = github.context.payload;
                     deps = dependencies.get_submodule_dependencies(pr.pull_request.body);
@@ -1791,36 +1791,43 @@ function run() {
                     if (deps.length == 0) {
                         return [2 /*return*/];
                     }
+                    core.startGroup("Setting git identity");
+                    return [4 /*yield*/, exec.exec("git", ["config", "--global", "user.name", "GitHub Action Runner"])];
+                case 1:
+                    _b.sent();
+                    core.endGroup();
                     core.startGroup("Update submodules");
                     _a = 0, deps_2 = deps;
-                    _b.label = 1;
-                case 1:
-                    if (!(_a < deps_2.length)) return [3 /*break*/, 5];
+                    _b.label = 2;
+                case 2:
+                    if (!(_a < deps_2.length)) return [3 /*break*/, 6];
                     dep = deps_2[_a];
                     git_options = { cwd: "./" + dep.depRepo };
                     return [4 /*yield*/, exec.exec("git", ["remote", "add", "pullfrom", "https://github.com/" + dep.depUser + "/" + dep.depRepo + ".git"], git_options)];
-                case 2:
-                    _b.sent();
-                    return [4 /*yield*/, exec.exec("git", ["pull", "--no-edit", "pullfrom", "pull/" + dep.depPR + "/head"], git_options)];
                 case 3:
                     _b.sent();
-                    core.info("Updated submodule " + dep.depRepo + " to " + dep.depUser + "/" + dep.depRepo + "#" + dep.depPR);
-                    _b.label = 4;
+                    // Pull without changing the default commit message, and always merge
+                    return [4 /*yield*/, exec.exec("git", ["pull", "--no-edit", "--no-rebase", "pullfrom", "pull/" + dep.depPR + "/head"], git_options)];
                 case 4:
-                    _a++;
-                    return [3 /*break*/, 1];
+                    // Pull without changing the default commit message, and always merge
+                    _b.sent();
+                    core.info("Updated submodule " + dep.depRepo + " to " + dep.depUser + "/" + dep.depRepo + "#" + dep.depPR);
+                    _b.label = 5;
                 case 5:
-                    core.endGroup();
-                    return [3 /*break*/, 7];
+                    _a++;
+                    return [3 /*break*/, 2];
                 case 6:
+                    core.endGroup();
+                    return [3 /*break*/, 8];
+                case 7:
                     core.info("Not a pull request, ignoring.");
-                    _b.label = 7;
-                case 7: return [3 /*break*/, 9];
-                case 8:
+                    _b.label = 8;
+                case 8: return [3 /*break*/, 10];
+                case 9:
                     error_1 = _b.sent();
                     core.setFailed(error_1.Message);
-                    return [3 /*break*/, 9];
-                case 9: return [2 /*return*/];
+                    return [3 /*break*/, 10];
+                case 10: return [2 /*return*/];
             }
         });
     });
