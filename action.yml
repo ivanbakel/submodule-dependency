@@ -1,5 +1,7 @@
 name: 'Pull submodule dependencies'
 description: 'Pull in changes on submodules which are required by a pull request'
+icon: git-pull-request
+color: blue
 runs:
   using: 'node12'
   main: 'dist/index.js'
